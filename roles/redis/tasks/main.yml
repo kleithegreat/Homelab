@@ -1,0 +1,22 @@
+---
+- name: Create Redis data directory
+  file:
+    path: "{{ data_root }}/redis"
+    state: directory
+    mode: '0755'
+
+- name: Deploy Redis container
+  community.docker.docker_container:
+    name: redis
+    image: "redis:{{ redis_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    volumes:
+      - "{{ data_root }}/redis:/data"
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

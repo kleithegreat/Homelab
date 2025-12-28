@@ -1,0 +1,4 @@
+---
+immich_version: "release"
+immich_upload_location: "{{ data_root }}/immich/upload"
+immich_machine_learning: true

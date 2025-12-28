@@ -1,0 +1,58 @@
+---
+- name: Create Paperless directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ data_root }}/paperless/data"
+    - "{{ data_root }}/paperless/media"
+    - "{{ data_root }}/paperless/export"
+    - "{{ data_root }}/paperless/consume"
+
+- name: Create Paperless database
+  community.docker.docker_container:
+    name: paperless-db-init
+    image: "tensorchord/pgvecto-rs:pg16-v0.2.1"
+    state: started
+    detach: false
+    cleanup: true
+    networks:
+      - name: "{{ docker_network }}"
+    env:
+      PGPASSWORD: "{{ postgres_password }}"
+    command: >
+      sh -c "
+        until pg_isready -h postgres -U {{ postgres_user }}; do sleep 2; done;
+        psql -h postgres -U {{ postgres_user }} -tc \"SELECT 1 FROM pg_database WHERE datname = 'paperless'\" | grep -q 1 || 
+        psql -h postgres -U {{ postgres_user }} -c 'CREATE DATABASE paperless;'
+      "
+
+- name: Deploy Paperless container
+  community.docker.docker_container:
+    name: paperless
+    image: "ghcr.io/paperless-ngx/paperless-ngx:{{ paperless_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.paperless }}:8000"
+    volumes:
+      - "{{ data_root }}/paperless/data:/usr/src/paperless/data"
+      - "{{ data_root }}/paperless/media:/usr/src/paperless/media"
+      - "{{ data_root }}/paperless/export:/usr/src/paperless/export"
+      - "{{ data_root }}/paperless/consume:/usr/src/paperless/consume"
+    env:
+      PAPERLESS_REDIS: "redis://redis:6379"
+      PAPERLESS_DBHOST: "postgres"
+      PAPERLESS_DBNAME: "paperless"
+      PAPERLESS_DBUSER: "{{ postgres_user }}"
+      PAPERLESS_DBPASS: "{{ postgres_password }}"
+      PAPERLESS_URL: "https://docs.{{ domain }}"
+      PAPERLESS_SECRET_KEY: "{{ paperless_secret_key }}"
+      PAPERLESS_ADMIN_USER: "{{ paperless_admin_user }}"
+      PAPERLESS_ADMIN_PASSWORD: "{{ paperless_admin_password }}"
+      PAPERLESS_OCR_LANGUAGE: "{{ paperless_ocr_language }}"
+      PAPERLESS_TIME_ZONE: "{{ paperless_time_zone }}"
+      USERMAP_UID: "1000"
+      USERMAP_GID: "1000"

@@ -1,0 +1,31 @@
+---
+- name: Create Caddy directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ data_root }}/caddy/data"
+    - "{{ data_root }}/caddy/config"
+
+- name: Create Caddyfile
+  template:
+    src: Caddyfile.j2
+    dest: "{{ data_root }}/caddy/Caddyfile"
+    mode: '0644'
+  notify: Restart Caddy
+
+- name: Deploy Caddy container
+  community.docker.docker_container:
+    name: caddy
+    image: caddy:2-alpine
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "{{ data_root }}/caddy/Caddyfile:/etc/caddy/Caddyfile:ro"
+      - "{{ data_root }}/caddy/data:/data"
+      - "{{ data_root }}/caddy/config:/config"

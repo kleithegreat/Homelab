@@ -1,0 +1,103 @@
+---
+- Infrastructure:
+{% if services.adguard %}
+    - AdGuard Home:
+        icon: adguard-home.png
+        href: https://adguard.{{ domain }}
+        description: DNS & Ad Blocking
+        server: my-docker
+        container: adguard
+{% endif %}
+{% if services.caddy %}
+    - Caddy:
+        icon: caddy.png
+        href: https://{{ server_ip }}
+        description: Reverse Proxy
+        server: my-docker
+        container: caddy
+{% endif %}
+
+- Services:
+{% if services.vaultwarden %}
+    - Vaultwarden:
+        icon: vaultwarden.png
+        href: https://vault.{{ domain }}
+        description: Password Manager
+        server: my-docker
+        container: vaultwarden
+{% endif %}
+{% if services.nextcloud %}
+    - Nextcloud:
+        icon: nextcloud.png
+        href: https://cloud.{{ domain }}
+        description: Cloud Storage
+        server: my-docker
+        container: nextcloud
+{% endif %}
+{% if services.paperless %}
+    - Paperless-ngx:
+        icon: paperless-ngx.png
+        href: https://docs.{{ domain }}
+        description: Document Management
+        server: my-docker
+        container: paperless
+{% endif %}
+{% if services.microbin %}
+    - Microbin:
+        icon: microbin.png
+        href: https://bin.{{ domain }}
+        description: Pastebin
+        server: my-docker
+        container: microbin
+{% endif %}
+
+- Media:
+{% if services.immich %}
+    - Immich:
+        icon: immich.png
+        href: https://photos.{{ domain }}
+        description: Photo Management
+        server: my-docker
+        container: immich-server
+{% endif %}
+{% if services.jellyfin %}
+    - Jellyfin:
+        icon: jellyfin.png
+        href: https://media.{{ domain }}
+        description: Media Server
+        server: my-docker
+        container: jellyfin
+{% endif %}
+# Add to Infrastructure section:
+{% if services.uptime_kuma %}
+    - Uptime Kuma:
+        icon: uptime-kuma.png
+        href: https://status.{{ domain }}
+        description: Status Monitoring
+        server: my-docker
+        container: uptime-kuma
+{% endif %}
+{% if services.gitea %}
+    - Gitea:
+        icon: gitea.png
+        href: https://git.{{ domain }}
+        description: Git Server
+        server: my-docker
+        container: gitea
+{% endif %}
+{% if services.karakeep %}
+    - Karakeep:
+        icon: karakeep.png
+        href: https://keep.{{ domain }}
+        description: Bookmarks
+        server: my-docker
+        container: karakeep
+{% endif %}
+{% if services.paperless %}
+    - Paperless-ngx:
+        icon: paperless-ngx.png
+        href: https://docs.{{ domain }}
+        description: Document Management
+        server: my-docker
+        container: paperless
+{% endif %}

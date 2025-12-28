@@ -1,0 +1,53 @@
+---
+- name: Create Gitea directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ data_root }}/gitea/data"
+    - "{{ data_root }}/gitea/config"
+
+- name: Create Gitea database
+  community.docker.docker_container:
+    name: gitea-db-init
+    image: "tensorchord/pgvecto-rs:pg16-v0.2.1"
+    state: started
+    detach: false
+    cleanup: true
+    networks:
+      - name: "{{ docker_network }}"
+    env:
+      PGPASSWORD: "{{ postgres_password }}"
+    command: >
+      sh -c "
+        until pg_isready -h postgres -U {{ postgres_user }}; do sleep 2; done;
+        psql -h postgres -U {{ postgres_user }} -tc \"SELECT 1 FROM pg_database WHERE datname = 'gitea'\" | grep -q 1 || 
+        psql -h postgres -U {{ postgres_user }} -c 'CREATE DATABASE gitea;'
+      "
+
+- name: Deploy Gitea container
+  community.docker.docker_container:
+    name: gitea
+    image: "gitea/gitea:{{ gitea_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.gitea }}:3000"
+      - "{{ ports.gitea_ssh }}:22"
+    volumes:
+      - "{{ data_root }}/gitea/data:/data"
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    env:
+      USER_UID: "1000"
+      USER_GID: "1000"
+      GITEA__database__DB_TYPE: "postgres"
+      GITEA__database__HOST: "postgres:5432"
+      GITEA__database__NAME: "gitea"
+      GITEA__database__USER: "{{ postgres_user }}"
+      GITEA__database__PASSWD: "{{ postgres_password }}"
+      GITEA__server__ROOT_URL: "https://git.{{ domain }}"
+      GITEA__server__DOMAIN: "git.{{ domain }}"
+      GITEA__server__SSH_DOMAIN: "git.{{ domain }}"

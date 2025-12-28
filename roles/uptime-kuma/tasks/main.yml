@@ -1,0 +1,19 @@
+---
+- name: Create Uptime Kuma directory
+  file:
+    path: "{{ data_root }}/uptime-kuma"
+    state: directory
+    mode: '0755'
+
+- name: Deploy Uptime Kuma container
+  community.docker.docker_container:
+    name: uptime-kuma
+    image: "louislam/uptime-kuma:{{ uptime_kuma_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.uptime_kuma }}:3001"
+    volumes:
+      - "{{ data_root }}/uptime-kuma:/app/data"
+      - /var/run/docker.sock:/var/run/docker.sock:ro

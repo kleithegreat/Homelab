@@ -1,0 +1,3 @@
+---
+nextcloud_version: "stable"
+nextcloud_admin_user: "admin"

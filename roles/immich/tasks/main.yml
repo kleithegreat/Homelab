@@ -1,0 +1,64 @@
+---
+- name: Create Immich directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ data_root }}/immich"
+    - "{{ data_root }}/immich/upload"
+    - "{{ data_root }}/immich/model-cache"
+
+- name: Create Immich database
+  community.docker.docker_container:
+    name: immich-db-init
+    image: "postgres:16-alpine"
+    state: started
+    detach: false
+    cleanup: true
+    networks:
+      - name: "{{ docker_network }}"
+    env:
+      PGPASSWORD: "{{ postgres_password }}"
+    command: >
+      sh -c "
+        until pg_isready -h postgres -U {{ postgres_user }}; do sleep 2; done;
+        psql -h postgres -U {{ postgres_user }} -tc \"SELECT 1 FROM pg_database WHERE datname = 'immich'\" | grep -q 1 || 
+        psql -h postgres -U {{ postgres_user }} -c 'CREATE DATABASE immich;'
+        psql -h postgres -U {{ postgres_user }} -d immich -c 'CREATE EXTENSION IF NOT EXISTS vectors;' || true
+        psql -h postgres -U {{ postgres_user }} -d immich -c 'CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;' || true
+      "
+
+- name: Deploy Immich Server
+  community.docker.docker_container:
+    name: immich-server
+    image: "ghcr.io/immich-app/immich-server:{{ immich_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    volumes:
+      - "{{ immich_upload_location }}:/usr/src/app/upload"
+      - /etc/localtime:/etc/localtime:ro
+    env:
+      DB_HOSTNAME: "postgres"
+      DB_USERNAME: "{{ postgres_user }}"
+      DB_PASSWORD: "{{ postgres_password }}"
+      DB_DATABASE_NAME: "immich"
+      REDIS_HOSTNAME: "redis"
+      IMMICH_MACHINE_LEARNING_URL: "http://immich-machine-learning:3003"
+    ports:
+      - "{{ ports.immich }}:2283"
+
+- name: Deploy Immich Machine Learning
+  community.docker.docker_container:
+    name: immich-machine-learning
+    image: "ghcr.io/immich-app/immich-machine-learning:{{ immich_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    volumes:
+      - "{{ data_root }}/immich/model-cache:/cache"
+    env:
+      IMMICH_HOST: "immich-server"
+      IMMICH_PORT: "2283"
+  when: immich_machine_learning

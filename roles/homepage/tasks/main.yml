@@ -1,0 +1,55 @@
+---
+- name: Create Homepage directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ data_root }}/homepage/config"
+
+- name: Create Homepage settings
+  template:
+    src: settings.yaml.j2
+    dest: "{{ data_root }}/homepage/config/settings.yaml"
+    mode: '0644'
+
+- name: Create Homepage services config
+  template:
+    src: services.yaml.j2
+    dest: "{{ data_root }}/homepage/config/services.yaml"
+    mode: '0644'
+
+- name: Create Homepage bookmarks config
+  template:
+    src: bookmarks.yaml.j2
+    dest: "{{ data_root }}/homepage/config/bookmarks.yaml"
+    mode: '0644'
+
+- name: Create Homepage widgets config
+  template:
+    src: widgets.yaml.j2
+    dest: "{{ data_root }}/homepage/config/widgets.yaml"
+    mode: '0644'
+
+- name: Create Homepage docker config
+  template:
+    src: docker.yaml.j2
+    dest: "{{ data_root }}/homepage/config/docker.yaml"
+    mode: '0644'
+
+- name: Deploy Homepage container
+  community.docker.docker_container:
+    name: homepage
+    image: "ghcr.io/gethomepage/homepage:{{ homepage_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "3001:3000"
+    volumes:
+      - "{{ data_root }}/homepage/config:/app/config"
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    env:
+      PUID: "1000"
+      PGID: "1000"
+      HOMEPAGE_ALLOWED_HOSTS: "192.168.121.10:3001,homepage.{{ domain }},localhost:3000"

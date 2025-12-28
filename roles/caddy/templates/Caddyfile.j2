@@ -1,0 +1,62 @@
+# Global options
+{
+	# For local/internal use, use internal CA
+	# Remove this block if you have a real domain with public DNS
+	local_certs
+	auto_https disable_redirects
+}
+
+# Homepage
+homepage.{{ domain }} {
+	reverse_proxy homepage:3000
+}
+
+# AdGuard
+adguard.{{ domain }} {
+	reverse_proxy adguard:3000
+}
+
+# Vaultwarden
+vault.{{ domain }} {
+	reverse_proxy vaultwarden:80
+}
+
+# Microbin
+bin.{{ domain }} {
+	reverse_proxy microbin:8080
+}
+
+# Immich
+photos.{{ domain }} {
+	reverse_proxy immich-server:2283
+}
+
+# Nextcloud
+cloud.{{ domain }} {
+	reverse_proxy nextcloud:80
+}
+
+# Jellyfin
+media.{{ domain }} {
+	reverse_proxy jellyfin:8096
+}
+
+# Paperless
+docs.{{ domain }} {
+	reverse_proxy paperless:8000
+}
+
+# Gitea
+git.{{ domain }} {
+	reverse_proxy gitea:3000
+}
+
+# Karakeep
+keep.{{ domain }} {
+	reverse_proxy karakeep:3000
+}
+
+# Uptime Kuma
+status.{{ domain }} {
+	reverse_proxy uptime-kuma:3001
+}

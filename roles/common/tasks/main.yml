@@ -1,0 +1,85 @@
+---
+- name: Set timezone
+  community.general.timezone:
+    name: "{{ timezone }}"
+
+- name: Update apt cache
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Install essential packages
+  apt:
+    name:
+      - curl
+      - wget
+      - git
+      - htop
+      - vim
+      - unzip
+      - jq
+      - net-tools
+      - dnsutils
+      - ca-certificates
+      - gnupg
+      - lsb-release
+    state: present
+
+- name: Create homelab data directory
+  file:
+    path: "{{ data_root }}"
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Disable systemd-resolved stub listener
+  lineinfile:
+    path: /etc/systemd/resolved.conf
+    regexp: '^#?DNSStubListener='
+    line: 'DNSStubListener=no'
+    state: present
+
+- name: Point resolv.conf to real DNS temporarily
+  file:
+    src: /run/systemd/resolve/resolv.conf
+    dest: /etc/resolv.conf
+    state: link
+    force: true
+
+- name: Check if systemd-resolved is using port 53
+  shell: ss -tulnp | grep ':53' | grep systemd-resolve || true
+  register: port_53_check
+  changed_when: false
+
+- name: Restart systemd-resolved to free port 53
+  systemd:
+    name: systemd-resolved
+    state: restarted
+  when: port_53_check.stdout | length > 0
+
+- name: Enable UFW
+  community.general.ufw:
+    state: enabled
+    policy: deny
+    direction: incoming
+
+- name: Allow SSH
+  community.general.ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: Allow HTTP/HTTPS
+  community.general.ufw:
+    rule: allow
+    port: "{{ item }}"
+    proto: tcp
+  loop:
+    - '80'
+    - '443'
+
+- name: Allow DNS (for AdGuard)
+  community.general.ufw:
+    rule: allow
+    port: '53'

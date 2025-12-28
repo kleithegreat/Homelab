@@ -1,0 +1,7 @@
+---
+microbin_public_path: "bin.{{ domain }}"
+microbin_hide_header: "false"
+microbin_hide_footer: "false"
+microbin_hide_logo: "false"
+microbin_private: "true"
+microbin_pure_html: "false"

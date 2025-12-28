@@ -1,0 +1,101 @@
+---
+# ===================
+# Network Configuration
+# ===================
+domain: home.local
+server_ip: 192.168.121.10  # VM now, change to real server IP later
+
+# ===================
+# System Configuration
+# ===================
+timezone: America/New_York  # change to yours
+data_root: /opt/homelab
+docker_network: homelab
+
+# ===================
+# Service Toggles
+# ===================
+services:
+  # Core infrastructure
+  caddy: true
+  adguard: true
+  homepage: true
+  
+  # Security
+  vaultwarden: true
+  
+  # Productivity
+  microbin: true
+  nextcloud: true
+  paperless: true
+  
+  # Media
+  immich: true
+  jellyfin: true
+  
+  # Maybe later (heavy or uncertain)
+  copyparty: false
+  docmost: false
+  karakeep: false
+  gitea: false  # using gitea instead of gitlab
+
+# ===================
+# Caddy Configuration
+# ===================
+caddy_email: you@example.com
+
+# ===================
+# Service Ports (internal, Caddy will proxy)
+# ===================
+ports:
+  adguard: 3000
+  adguard_dns: 53
+  vaultwarden: 8080
+  microbin: 8081
+  homepage: 3001
+  immich: 2283
+  nextcloud: 8082
+  jellyfin: 8096
+  gitea: 3002
+  gitea_ssh: 2222
+  karakeep: 3003
+  paperless: 8083
+  uptime_kuma: 3004
+
+# ===================
+# Homepage Docker Integration
+# ===================
+homepage_docker:
+  my-docker:
+    socket: /var/run/docker.sock
+
+# ===================
+# Database Configuration
+# ===================
+postgres_user: homelab
+postgres_password: "change-me-to-something-secure"
+
+# ===================
+# Nextcloud Configuration
+# ===================
+nextcloud_admin_user: admin
+nextcloud_admin_password: "change-me-to-something-secure"
+
+immich_machine_learning: false
+
+# ===================
+# Gitea Configuration
+# ===================
+# (uses postgres_user and postgres_password from database config)
+
+# ===================
+# Karakeep Configuration
+# ===================
+karakeep_secret: "change-me-to-random-string-32-chars"
+
+# ===================
+# Paperless Configuration
+# ===================
+paperless_secret_key: "change-me-to-random-string-50-chars"
+paperless_admin_user: "admin"
+paperless_admin_password: "change-me-to-something-secure"

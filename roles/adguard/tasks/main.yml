@@ -1,0 +1,26 @@
+---
+- name: Create AdGuard directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ data_root }}/adguard/work"
+    - "{{ data_root }}/adguard/conf"
+
+- name: Deploy AdGuard Home container
+  community.docker.docker_container:
+    name: adguard
+    image: adguard/adguardhome:latest
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      # DNS ports - these need to be exposed to the host
+      - "53:53/tcp"
+      - "53:53/udp"
+      # Initial setup port (can be removed after setup)
+      - "3000:3000/tcp"
+    volumes:
+      - "{{ data_root }}/adguard/work:/opt/adguardhome/work"
+      - "{{ data_root }}/adguard/conf:/opt/adguardhome/conf"

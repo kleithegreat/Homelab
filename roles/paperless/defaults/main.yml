@@ -1,0 +1,4 @@
+---
+paperless_version: "latest"
+paperless_ocr_language: "eng"
+paperless_time_zone: "{{ timezone }}"

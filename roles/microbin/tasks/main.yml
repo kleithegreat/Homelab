@@ -1,0 +1,25 @@
+---
+- name: Create Microbin directory
+  file:
+    path: "{{ data_root }}/microbin"
+    state: directory
+    mode: '0755'
+
+- name: Deploy Microbin container
+  community.docker.docker_container:
+    name: microbin
+    image: danielszabo99/microbin:latest
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.microbin }}:8080"
+    volumes:
+      - "{{ data_root }}/microbin:/app/pasta_data"
+    env:
+      MICROBIN_PUBLIC_PATH: "https://{{ microbin_public_path }}"
+      MICROBIN_PRIVATE: "{{ microbin_private }}"
+      MICROBIN_HIDE_HEADER: "{{ microbin_hide_header }}"
+      MICROBIN_HIDE_FOOTER: "{{ microbin_hide_footer }}"
+      MICROBIN_HIDE_LOGO: "{{ microbin_hide_logo }}"
+      MICROBIN_PURE_HTML: "{{ microbin_pure_html }}"

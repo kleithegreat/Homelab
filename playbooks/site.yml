@@ -1,0 +1,40 @@
+---
+- name: Configure Homelab Server
+  hosts: homeserver
+  become: true
+
+  pre_tasks:
+    - name: Verify connectivity
+      ping:
+
+  roles:
+    - common
+    - docker
+    - role: caddy
+      when: services.caddy
+    - role: adguard
+      when: services.adguard
+    - role: homepage
+      when: services.homepage
+    - role: vaultwarden
+      when: services.vaultwarden
+    - role: microbin
+      when: services.microbin
+    # Database layer
+    - role: postgres
+      when: services.nextcloud or services.immich or services.paperless or services.gitea
+    - role: redis
+      when: services.nextcloud or services.immich or services.paperless
+    # Apps
+    - role: nextcloud
+      when: services.nextcloud
+    - role: immich
+      when: services.immich
+    - role: gitea
+      when: services.gitea
+    - role: karakeep
+      when: services.karakeep
+    - role: paperless
+      when: services.paperless
+    - role: uptime-kuma
+      when: services.uptime_kuma

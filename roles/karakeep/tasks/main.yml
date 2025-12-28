@@ -1,0 +1,37 @@
+---
+- name: Create Karakeep directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ data_root }}/karakeep/data"
+
+- name: Deploy Karakeep Meilisearch
+  community.docker.docker_container:
+    name: karakeep-meilisearch
+    image: getmeili/meilisearch:v1.6
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    volumes:
+      - "{{ data_root }}/karakeep/meilisearch:/meili_data"
+    env:
+      MEILI_NO_ANALYTICS: "true"
+
+- name: Deploy Karakeep container
+  community.docker.docker_container:
+    name: karakeep
+    image: "ghcr.io/karakeep-app/karakeep:{{ karakeep_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.karakeep }}:3000"
+    volumes:
+      - "{{ data_root }}/karakeep/data:/data"
+    env:
+      MEILI_ADDR: "http://karakeep-meilisearch:7700"
+      DATA_DIR: "/data"
+      NEXTAUTH_SECRET: "{{ karakeep_secret }}"
+      NEXTAUTH_URL: "https://keep.{{ domain }}"
