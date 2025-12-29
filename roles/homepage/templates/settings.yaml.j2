@@ -1,15 +1,227 @@
 ---
 title: Homelab
+favicon: https://cdn.jsdelivr.net/gh/walkxcode/dashboard-icons/png/homepage.png
+
 theme: dark
-color: slate
-headerStyle: boxed
+color: zinc
+
+background:
+  image: ""
+  blur: ""
+  opacity: 100
+
+cardBlur: md
+headerStyle: clean
+
+hideVersion: true
+
 layout:
   Infrastructure:
     style: row
     columns: 4
+    header: true
+    icon: mdi-server-network
   Services:
     style: row
     columns: 4
+    header: true
+    icon: mdi-apps
   Media:
     style: row
     columns: 4
+    header: true
+    icon: mdi-multimedia
+  Monitoring:
+    style: row
+    columns: 4
+    header: true
+    icon: mdi-chart-areaspline
+
+customCss: |
+  @import url('https://fonts.cdnfonts.com/css/sf-pro-display');
+  
+  :root {
+    --gruvbox-bg: #282828;
+    --gruvbox-bg0-hard: #1d2021;
+    --gruvbox-bg1: #3c3836;
+    --gruvbox-bg2: #504945;
+    --gruvbox-bg3: #665c54;
+    --gruvbox-fg: #ebdbb2;
+    --gruvbox-fg0: #fbf1c7;
+    --gruvbox-fg3: #bdae93;
+    --gruvbox-fg4: #a89984;
+    --gruvbox-red: #fb4934;
+    --gruvbox-green: #b8bb26;
+    --gruvbox-yellow: #fabd2f;
+    --gruvbox-blue: #83a598;
+    --gruvbox-purple: #d3869b;
+    --gruvbox-aqua: #8ec07c;
+    --gruvbox-orange: #fe8019;
+  }
+
+  * {
+    font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  }
+
+  body, #page_container, .dark {
+    background: var(--gruvbox-bg0-hard) !important;
+  }
+
+  /* Main container gradient */
+  #page_container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+      radial-gradient(ellipse at top left, rgba(214, 93, 14, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(104, 157, 106, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* Cards */
+  .service, .service-card, [class*="card"] {
+    background: var(--gruvbox-bg1) !important;
+    border: 1px solid var(--gruvbox-bg2) !important;
+    border-radius: 12px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  }
+
+  .service:hover, .service-card:hover, [class*="card"]:hover {
+    background: var(--gruvbox-bg2) !important;
+    border-color: var(--gruvbox-orange) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--gruvbox-bg3) !important;
+  }
+
+  /* Text colors */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--gruvbox-fg0) !important;
+    font-weight: 600 !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  p, span, div, a {
+    color: var(--gruvbox-fg) !important;
+  }
+
+  /* Section headers */
+  .text-theme-700, .dark .text-white {
+    color: var(--gruvbox-fg0) !important;
+  }
+
+  /* Service titles */
+  .service-title, [class*="service"] h3, [class*="service"] .name {
+    color: var(--gruvbox-fg0) !important;
+    font-weight: 500 !important;
+  }
+
+  /* Service descriptions */
+  .service-description, [class*="service"] p, .text-xs {
+    color: var(--gruvbox-fg4) !important;
+  }
+
+  /* Status indicators - online */
+  .bg-green-500, .text-green-500 {
+    background-color: var(--gruvbox-green) !important;
+    color: var(--gruvbox-green) !important;
+  }
+
+  /* Status indicators - warning */
+  .bg-yellow-500, .text-yellow-500 {
+    background-color: var(--gruvbox-yellow) !important;
+    color: var(--gruvbox-yellow) !important;
+  }
+
+  /* Status indicators - error */
+  .bg-red-500, .text-red-500 {
+    background-color: var(--gruvbox-red) !important;
+    color: var(--gruvbox-red) !important;
+  }
+
+  /* Links */
+  a:hover {
+    color: var(--gruvbox-orange) !important;
+  }
+
+  /* Widget styling */
+  .widget, [class*="widget"] {
+    background: var(--gruvbox-bg1) !important;
+    border: 1px solid var(--gruvbox-bg2) !important;
+    border-radius: 12px !important;
+  }
+
+  /* Resource bars */
+  .bg-theme-500, [class*="progress"] {
+    background: var(--gruvbox-bg2) !important;
+  }
+
+  .bg-theme-500 > div, [class*="progress"] > div {
+    background: linear-gradient(90deg, var(--gruvbox-aqua), var(--gruvbox-green)) !important;
+    border-radius: 4px !important;
+  }
+
+  /* DateTime widget */
+  .datetime, .text-4xl, .text-3xl {
+    color: var(--gruvbox-fg0) !important;
+  }
+
+  /* Group headers with accent line */
+  .group-header, [class*="category"], h2 {
+    position: relative;
+    padding-left: 12px !important;
+  }
+
+  .group-header::before, [class*="category"]::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: var(--gruvbox-orange);
+    border-radius: 2px;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--gruvbox-bg0-hard);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--gruvbox-bg3);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--gruvbox-fg4);
+  }
+
+  /* Icon containers */
+  .service-icon, [class*="icon"] {
+    border-radius: 8px !important;
+    padding: 4px !important;
+  }
+
+  /* Subtle noise texture overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.015;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    z-index: 9999;
+  }

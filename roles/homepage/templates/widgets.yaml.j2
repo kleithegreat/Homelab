@@ -1,15 +1,13 @@
 ---
-- search:
-    provider: duckduckgo
-    target: _blank
+- datetime:
+    text_size: 3xl
+    format:
+      dateStyle: long
+      timeStyle: short
+      hour12: true
 
 - resources:
     cpu: true
     memory: true
     disk: /
-
-- datetime:
-    text_size: xl
-    format:
-      dateStyle: long
-      timeStyle: short
+    refresh: 3000
