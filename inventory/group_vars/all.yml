@@ -28,16 +28,19 @@ services:
   microbin: true
   nextcloud: true
   paperless: true
+  karakeep: true
+  gitea: true
   
   # Media
   immich: true
   jellyfin: true
   
+  # Monitoring
+  uptime_kuma: true
+  
   # Maybe later (heavy or uncertain)
   copyparty: false
   docmost: false
-  karakeep: false
-  gitea: false  # using gitea instead of gitlab
 
 # ===================
 # Caddy Configuration
