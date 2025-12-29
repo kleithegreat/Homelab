@@ -25,6 +25,9 @@
       - lsb-release
     state: present
 
+- name: Setup swap space
+  include_tasks: swap.yml
+
 - name: Create homelab data directory
   file:
     path: "{{ data_root }}"

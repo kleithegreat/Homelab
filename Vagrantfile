@@ -3,8 +3,8 @@ Vagrant.configure("2") do |config|
   config.vm.hostname = "homeserver"
 
   config.vm.provider :libvirt do |libvirt|
-    libvirt.memory = 16384
-    libvirt.cpus = 2
+    libvirt.memory = 8192
+    libvirt.cpus = 4
     libvirt.driver = "kvm"
   end
 
