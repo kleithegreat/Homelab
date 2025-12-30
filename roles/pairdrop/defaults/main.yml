@@ -1,0 +1,6 @@
+---
+pairdrop_version: "latest"
+# Set to "true" to enable WebSocket fallback for networks that block WebRTC
+pairdrop_ws_fallback: "false"
+# Set to "true" to enable rate limiting
+pairdrop_rate_limit: "false"

@@ -60,3 +60,18 @@ keep.{{ domain }} {
 status.{{ domain }} {
 	reverse_proxy uptime-kuma:3001
 }
+
+# Filebrowser
+files.{{ domain }} {
+	reverse_proxy filebrowser:80
+}
+
+# Kavita
+books.{{ domain }} {
+	reverse_proxy kavita:5000
+}
+
+# PairDrop
+drop.{{ domain }} {
+	reverse_proxy pairdrop:3000
+}

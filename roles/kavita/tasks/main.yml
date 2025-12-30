@@ -1,0 +1,24 @@
+---
+- name: Create Kavita directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ data_root }}/kavita/config"
+    - "{{ data_root }}/kavita/books"
+
+- name: Deploy Kavita container
+  community.docker.docker_container:
+    name: kavita
+    image: "jvmilazz0/kavita:{{ kavita_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.kavita }}:5000"
+    volumes:
+      - "{{ data_root }}/kavita/config:/kavita/config"
+      - "{{ data_root }}/kavita/books:/books"
+    env:
+      TZ: "{{ timezone }}"

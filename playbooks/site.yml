@@ -38,3 +38,9 @@
       when: services.paperless
     - role: uptime-kuma
       when: services.uptime_kuma
+    - role: filebrowser
+      when: services.filebrowser
+    - role: kavita
+      when: services.kavita
+    - role: pairdrop
+      when: services.pairdrop

@@ -16,6 +16,14 @@
         server: my-docker
         container: uptime-kuma
 {% endif %}
+{% if services.filebrowser %}
+    - Filebrowser:
+        icon: filebrowser.png
+        href: https://files.{{ domain }}
+        description: File Management
+        server: my-docker
+        container: filebrowser
+{% endif %}
 
 - Services:
 {% if services.vaultwarden %}
@@ -66,6 +74,14 @@
         server: my-docker
         container: microbin
 {% endif %}
+{% if services.pairdrop %}
+    - PairDrop:
+        icon: pairdrop.png
+        href: https://drop.{{ domain }}
+        description: File Sharing
+        server: my-docker
+        container: pairdrop
+{% endif %}
 
 - Media:
 {% if services.immich %}
@@ -83,4 +99,12 @@
         description: Media Server
         server: my-docker
         container: jellyfin
+{% endif %}
+{% if services.kavita %}
+    - Kavita:
+        icon: kavita.png
+        href: https://books.{{ domain }}
+        description: Ebook Library
+        server: my-docker
+        container: kavita
 {% endif %}

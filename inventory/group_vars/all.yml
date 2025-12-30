@@ -30,10 +30,15 @@ services:
   paperless: true
   karakeep: true
   gitea: true
+  filebrowser: true
   
   # Media
   immich: true
   jellyfin: true
+  kavita: true
+  
+  # Utilities
+  pairdrop: true
   
   # Monitoring
   uptime_kuma: true
@@ -64,6 +69,9 @@ ports:
   karakeep: 3003
   paperless: 8083
   uptime_kuma: 3004
+  filebrowser: 8084
+  kavita: 5000
+  pairdrop: 3005
 
 # ===================
 # Homepage Docker Integration

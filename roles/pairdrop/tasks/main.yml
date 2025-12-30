@@ -1,0 +1,16 @@
+---
+- name: Deploy PairDrop container
+  community.docker.docker_container:
+    name: pairdrop
+    image: "lscr.io/linuxserver/pairdrop:{{ pairdrop_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.pairdrop }}:3000"
+    env:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "{{ timezone }}"
+      WS_FALLBACK: "{{ pairdrop_ws_fallback }}"
+      RATE_LIMIT: "{{ pairdrop_rate_limit }}"
