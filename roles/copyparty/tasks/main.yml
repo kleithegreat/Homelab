@@ -1,0 +1,25 @@
+---
+- name: Create Copyparty directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ copyparty_data_dir }}"
+
+- name: Deploy Copyparty container
+  community.docker.docker_container:
+    name: copyparty
+    image: "ghcr.io/9001/copyparty:{{ copyparty_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.copyparty }}:3923"
+    volumes:
+      - "{{ copyparty_data_dir }}:/data"
+    command: >
+      -v /data::rwmd
+      --urlbase /
+    env:
+      TZ: "{{ timezone }}"

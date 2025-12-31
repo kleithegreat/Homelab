@@ -26,14 +26,14 @@ bin.{{ domain }} {
 	reverse_proxy microbin:8080
 }
 
+# Copyparty
+files.{{ domain }} {
+	reverse_proxy copyparty:3923
+}
+
 # Immich
 photos.{{ domain }} {
 	reverse_proxy immich-server:2283
-}
-
-# Nextcloud
-cloud.{{ domain }} {
-	reverse_proxy nextcloud:80
 }
 
 # Jellyfin
@@ -59,11 +59,6 @@ keep.{{ domain }} {
 # Uptime Kuma
 status.{{ domain }} {
 	reverse_proxy uptime-kuma:3001
-}
-
-# Filebrowser
-files.{{ domain }} {
-	reverse_proxy filebrowser:80
 }
 
 # Kavita

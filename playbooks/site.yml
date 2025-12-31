@@ -20,14 +20,14 @@
       when: services.vaultwarden
     - role: microbin
       when: services.microbin
+    - role: copyparty
+      when: services.copyparty
     # Database layer
     - role: postgres
-      when: services.nextcloud or services.immich or services.paperless or services.gitea
+      when: services.immich or services.paperless or services.gitea
     - role: redis
-      when: services.nextcloud or services.immich or services.paperless
+      when: services.immich or services.paperless
     # Apps
-    - role: nextcloud
-      when: services.nextcloud
     - role: immich
       when: services.immich
     - role: gitea
@@ -38,8 +38,6 @@
       when: services.paperless
     - role: uptime-kuma
       when: services.uptime_kuma
-    - role: filebrowser
-      when: services.filebrowser
     - role: kavita
       when: services.kavita
     - role: pairdrop

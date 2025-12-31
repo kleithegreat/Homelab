@@ -16,14 +16,6 @@
         server: my-docker
         container: uptime-kuma
 {% endif %}
-{% if services.filebrowser %}
-    - Filebrowser:
-        icon: filebrowser.png
-        href: https://files.{{ domain }}
-        description: File Management
-        server: my-docker
-        container: filebrowser
-{% endif %}
 
 - Services:
 {% if services.vaultwarden %}
@@ -34,13 +26,13 @@
         server: my-docker
         container: vaultwarden
 {% endif %}
-{% if services.nextcloud %}
-    - Nextcloud:
-        icon: nextcloud.png
-        href: https://cloud.{{ domain }}
-        description: Cloud Storage
+{% if services.copyparty %}
+    - Copyparty:
+        icon: copyparty.png
+        href: https://files.{{ domain }}
+        description: File Server
         server: my-docker
-        container: nextcloud
+        container: copyparty
 {% endif %}
 {% if services.karakeep %}
     - Karakeep:

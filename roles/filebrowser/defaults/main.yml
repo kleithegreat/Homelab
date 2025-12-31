@@ -1,3 +1,0 @@
----
-filebrowser_version: "latest"
-filebrowser_root: "{{ data_root }}"

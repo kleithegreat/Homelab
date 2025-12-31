@@ -8,7 +8,7 @@ server_ip: 192.168.121.10  # VM now, change to real server IP later
 # ===================
 # System Configuration
 # ===================
-timezone: America/New_York  # change to yours
+timezone: America/New_York
 data_root: /opt/homelab
 docker_network: homelab
 
@@ -21,16 +21,10 @@ services:
   adguard: true
   homepage: true
   
-  # Security
-  vaultwarden: true
-  
   # Productivity
-  microbin: true
-  nextcloud: true
   paperless: true
   karakeep: true
   gitea: true
-  filebrowser: true
   
   # Media
   immich: true
@@ -38,14 +32,13 @@ services:
   kavita: true
   
   # Utilities
+  vaultwarden: true
+  copyparty: true
+  microbin: true
   pairdrop: true
   
   # Monitoring
   uptime_kuma: true
-  
-  # Maybe later (heavy or uncertain)
-  copyparty: false
-  docmost: false
 
 # ===================
 # Caddy Configuration
@@ -62,14 +55,13 @@ ports:
   microbin: 8081
   homepage: 3001
   immich: 2283
-  nextcloud: 8082
+  copyparty: 3923
   jellyfin: 8096
   gitea: 3002
   gitea_ssh: 2222
   karakeep: 3003
   paperless: 8083
   uptime_kuma: 3004
-  filebrowser: 8084
   kavita: 5000
   pairdrop: 3005
 
@@ -85,12 +77,6 @@ homepage_docker:
 # ===================
 postgres_user: homelab
 postgres_password: "change-me-to-something-secure"
-
-# ===================
-# Nextcloud Configuration
-# ===================
-nextcloud_admin_user: admin
-nextcloud_admin_password: "change-me-to-something-secure"
 
 immich_machine_learning: false
 
