@@ -10,7 +10,7 @@
 - name: Deploy Copyparty container
   community.docker.docker_container:
     name: copyparty
-    image: "ghcr.io/9001/copyparty:{{ copyparty_version }}"
+    image: "{{ copyparty_image }}:{{ copyparty_version }}"
     restart_policy: unless-stopped
     networks:
       - name: "{{ docker_network }}"
@@ -18,8 +18,6 @@
       - "{{ ports.copyparty }}:3923"
     volumes:
       - "{{ copyparty_data_dir }}:/data"
-    command: >
-      -v /data::rwmd
-      --urlbase /
+    command: -v /data::rwmd
     env:
       TZ: "{{ timezone }}"

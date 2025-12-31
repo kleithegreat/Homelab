@@ -22,12 +22,10 @@
       when: services.microbin
     - role: copyparty
       when: services.copyparty
-    # Database layer
     - role: postgres
       when: services.immich or services.paperless or services.gitea
     - role: redis
       when: services.immich or services.paperless
-    # Apps
     - role: immich
       when: services.immich
     - role: gitea

@@ -1,3 +1,4 @@
 ---
+copyparty_image: "copyparty/iv"
 copyparty_version: "latest"
 copyparty_data_dir: "{{ data_root }}/copyparty"
