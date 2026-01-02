@@ -1,0 +1,24 @@
+---
+- name: Create Radarr directory
+  file:
+    path: "{{ data_root }}/radarr"
+    state: directory
+    mode: '0755'
+
+- name: Deploy Radarr container
+  community.docker.docker_container:
+    name: radarr
+    image: "lscr.io/linuxserver/radarr:{{ radarr_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.radarr }}:7878"
+    volumes:
+      - "{{ data_root }}/radarr:/config"
+      - "{{ data_root }}/media/movies:/movies"
+      - "{{ data_root }}/downloads:/downloads"
+    env:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "{{ timezone }}"

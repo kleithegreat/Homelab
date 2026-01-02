@@ -1,0 +1,5 @@
+---
+jellyfin_version: "latest"
+jellyfin_config_dir: "{{ data_root }}/jellyfin/config"
+jellyfin_cache_dir: "{{ data_root }}/jellyfin/cache"
+jellyfin_media_dir: "{{ data_root }}/media"

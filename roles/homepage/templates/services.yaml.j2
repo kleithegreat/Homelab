@@ -76,14 +76,6 @@
 {% endif %}
 
 - Media:
-{% if services.immich %}
-    - Immich:
-        icon: immich.png
-        href: https://photos.{{ domain }}
-        description: Photo Management
-        server: my-docker
-        container: immich-server
-{% endif %}
 {% if services.jellyfin %}
     - Jellyfin:
         icon: jellyfin.png
@@ -92,6 +84,14 @@
         server: my-docker
         container: jellyfin
 {% endif %}
+{% if services.immich %}
+    - Immich:
+        icon: immich.png
+        href: https://photos.{{ domain }}
+        description: Photo Management
+        server: my-docker
+        container: immich-server
+{% endif %}
 {% if services.kavita %}
     - Kavita:
         icon: kavita.png
@@ -99,4 +99,36 @@
         description: Ebook Library
         server: my-docker
         container: kavita
+{% endif %}
+{% if services.sonarr %}
+    - Sonarr:
+        icon: sonarr.png
+        href: https://tv.{{ domain }}
+        description: TV Shows
+        server: my-docker
+        container: sonarr
+{% endif %}
+{% if services.radarr %}
+    - Radarr:
+        icon: radarr.png
+        href: https://movies.{{ domain }}
+        description: Movies
+        server: my-docker
+        container: radarr
+{% endif %}
+{% if services.prowlarr %}
+    - Prowlarr:
+        icon: prowlarr.png
+        href: https://indexers.{{ domain }}
+        description: Indexer Manager
+        server: my-docker
+        container: prowlarr
+{% endif %}
+{% if services.qbittorrent %}
+    - qBittorrent:
+        icon: qbittorrent.png
+        href: https://downloads.{{ domain }}
+        description: Download Client
+        server: my-docker
+        container: qbittorrent
 {% endif %}

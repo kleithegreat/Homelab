@@ -40,3 +40,13 @@
       when: services.kavita
     - role: pairdrop
       when: services.pairdrop
+    - role: qbittorrent
+      when: services.qbittorrent
+    - role: prowlarr
+      when: services.prowlarr
+    - role: sonarr
+      when: services.sonarr
+    - role: radarr
+      when: services.radarr
+    - role: jellyfin
+      when: services.jellyfin

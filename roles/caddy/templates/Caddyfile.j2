@@ -70,3 +70,24 @@ books.{{ domain }} {
 drop.{{ domain }} {
 	reverse_proxy pairdrop:3000
 }
+
+# Arr Stack
+# Sonarr
+tv.{{ domain }} {
+	reverse_proxy sonarr:8989
+}
+
+# Radarr
+movies.{{ domain }} {
+	reverse_proxy radarr:7878
+}
+
+# Prowlarr
+indexers.{{ domain }} {
+	reverse_proxy prowlarr:9696
+}
+
+# qBittorrent
+downloads.{{ domain }} {
+	reverse_proxy qbittorrent:8080
+}

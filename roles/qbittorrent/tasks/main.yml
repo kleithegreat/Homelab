@@ -1,0 +1,63 @@
+---
+- name: Create qBittorrent directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ data_root }}/qbittorrent"
+    - "{{ data_root }}/downloads"
+    - "{{ data_root }}/downloads/incomplete"
+
+- name: Deploy qBittorrent container
+  community.docker.docker_container:
+    name: qbittorrent
+    image: "lscr.io/linuxserver/qbittorrent:{{ qbittorrent_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.qbittorrent }}:{{ qbittorrent_webui_port }}"
+      - "6881:6881"
+      - "6881:6881/udp"
+    volumes:
+      - "{{ data_root }}/qbittorrent:/config"
+      - "{{ data_root }}/downloads:/downloads"
+    env:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "{{ timezone }}"
+      WEBUI_PORT: "{{ qbittorrent_webui_port }}"
+  register: qbittorrent_container
+
+- name: Wait for qBittorrent to initialize
+  pause:
+    seconds: 5
+  when: qbittorrent_container.changed
+
+- name: Get qBittorrent container logs
+  command: docker logs qbittorrent
+  register: qbittorrent_logs
+  changed_when: false
+  when: qbittorrent_container.changed
+
+- name: Extract temporary password from logs
+  set_fact:
+    qbittorrent_temp_password: "{{ qbittorrent_logs.stdout | regex_search('temporary password is provided for this session: ([A-Za-z0-9]+)', '\\1') | first }}"
+  when: 
+    - qbittorrent_container.changed
+    - qbittorrent_logs.stdout is search('temporary password')
+  ignore_errors: true
+
+- name: Display qBittorrent credentials
+  debug:
+    msg: |
+      ============================================
+      qBittorrent WebUI Credentials
+      ============================================
+      URL:      https://downloads.{{ domain }}
+      Username: admin
+      Password: {{ qbittorrent_temp_password | default('Check container logs: docker logs qbittorrent') }}
+      ============================================
+      Please change the password after first login!
+  when: qbittorrent_container.changed

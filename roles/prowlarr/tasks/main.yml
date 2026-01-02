@@ -1,0 +1,22 @@
+---
+- name: Create Prowlarr directory
+  file:
+    path: "{{ data_root }}/prowlarr"
+    state: directory
+    mode: '0755'
+
+- name: Deploy Prowlarr container
+  community.docker.docker_container:
+    name: prowlarr
+    image: "lscr.io/linuxserver/prowlarr:{{ prowlarr_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.prowlarr }}:9696"
+    volumes:
+      - "{{ data_root }}/prowlarr:/config"
+    env:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "{{ timezone }}"

@@ -40,6 +40,12 @@ services:
   # Monitoring
   uptime_kuma: true
 
+  # Arr Stack
+  sonarr: true
+  radarr: true
+  prowlarr: true
+  qbittorrent: true
+
 # ===================
 # Caddy Configuration
 # ===================
@@ -64,6 +70,10 @@ ports:
   uptime_kuma: 3004
   kavita: 5000
   pairdrop: 3005
+  sonarr: 8989
+  radarr: 7878
+  prowlarr: 9696
+  qbittorrent: 8084
 
 # ===================
 # Homepage Docker Integration
@@ -78,7 +88,7 @@ homepage_docker:
 postgres_user: homelab
 postgres_password: "change-me-to-something-secure"
 
-immich_machine_learning: false
+immich_machine_learning: true
 
 # ===================
 # Gitea Configuration

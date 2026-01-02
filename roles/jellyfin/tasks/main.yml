@@ -1,0 +1,30 @@
+---
+- name: Create Jellyfin directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - "{{ jellyfin_config_dir }}"
+    - "{{ jellyfin_cache_dir }}"
+    - "{{ jellyfin_media_dir }}"
+    - "{{ jellyfin_media_dir }}/movies"
+    - "{{ jellyfin_media_dir }}/tv"
+    - "{{ jellyfin_media_dir }}/music"
+
+- name: Deploy Jellyfin container
+  community.docker.docker_container:
+    name: jellyfin
+    image: "jellyfin/jellyfin:{{ jellyfin_version }}"
+    restart_policy: unless-stopped
+    networks:
+      - name: "{{ docker_network }}"
+    ports:
+      - "{{ ports.jellyfin }}:8096"
+    volumes:
+      - "{{ jellyfin_config_dir }}:/config"
+      - "{{ jellyfin_cache_dir }}:/cache"
+      - "{{ jellyfin_media_dir }}:/media:ro"
+    env:
+      JELLYFIN_PublishedServerUrl: "https://media.{{ domain }}"
+      TZ: "{{ timezone }}"
